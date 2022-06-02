@@ -12,42 +12,52 @@ class App extends Component {
       searchField: "",
     };
   }
-  componentDidMount() {
-    fetch("https://jsonplaceholder.typicode.com/users")
-      .then((response) => response.json())
-      .then((users) =>
-        this.setState(() => {
-          return { monsters: users };
-        })
+
+  async componentDidMount() {
+    // console.log('componentDidMounted');
+    fetch('https://jsonplaceholder.typicode.com/users')
+      .then(response => response.json())
+      .then(users =>
+        this.setState(
+          () => {
+            return { monsters: users }
+          }
+        ))
+  }   
+
+    onSearchChange = (event) => {
+      const searchField = event.target.value.toLowerCase();
+      this.setState(() => {
+        return { searchField };
+      });
+    };
+
+    render() {
+      const { monsters, searchField } = this.state;
+      const { onSearchChange } = this;
+
+
+      const filteredMonsters = monsters.filter((monster) => {
+        return monster.name.toLowerCase().includes(searchField);
+      });
+
+      return (
+        <div className="App">
+          <input
+            type="text"
+            className="search-box"
+            placeholder="Search Monsters"
+            onChange={onSearchChange}
+          />
+        
+          <CardList
+            monsters={filteredMonsters}
+          />
+        </div>
       );
+    }
+
   }
 
-  onSearchChange = (event) => {
-    const searchField = event.target.value.toLowerCase();
-    this.setState(() => {
-      return { searchField };
-    });
-  };
 
-  render() {
-    const { monsters, searchField } = this.state;
-    const { onSearchChange } = this;
-
-    const filteredMonsters = monsters.filter((monster) => {
-      return monster.name.toLowerCase().includes(searchField);
-    });
-
-    return (
-      <div className="App">
-        <SearchBox
-          onSearchChange={onSearchChange}
-          className={"search-box"}
-          placeholder={"search monsters"}
-        />
-        <CardList monsters={filteredMonsters} />
-      </div>
-    );
-  }
-}
-
-export default App;
+export default App
