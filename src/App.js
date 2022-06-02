@@ -9,11 +9,12 @@ class App extends Component {
       monsters: []
     }    
   }
-  componentDidMount() {
-    console.log('componentDidMounted');
+  async componentDidMount() {
+    // console.log('componentDidMounted');
     fetch('https://jsonplaceholder.typicode.com/users')
       .then(response => response.json())
-      .then(users => this.setState(
+      .then(users =>
+        this.setState(
         () => {
           return { monsters: users }
         },
