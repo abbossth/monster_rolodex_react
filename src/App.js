@@ -1,39 +1,60 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import "./App.css";
-// import CardList from "./components/card-list/card-list.component";
+import CardList from "./components/card-list/card-list.component";
 import SearchBox from "./components/search-box/search-box.component";
 
 
 
 
 const App = () => {
-  // console.log('render');
-  const [searchField, setSearchField] = useState(''); // [value, setValue]
-  
+
+  const [monsters, setMonsters] = useState([]);
+  const [searchField, setSearchField] = useState('');
+  const [filteredMonsters, setFilteredMonsters] = useState([])
+
+  console.log('render');
+
+  useEffect(() => {
+    console.log('effect fired');
+    fetch('https://jsonplaceholder.typicode.com/users')
+      .then(response => response.json())
+      .then(users => setMonsters(users))
+  }, [])
+
+  useEffect(() => {
+    const newFilteredMonsters = monsters.filter((monster) => {
+      return monster.name.toLowerCase().includes(searchField);
+    })
+    setFilteredMonsters(newFilteredMonsters)
+  }, [])
+
   const onSearchChange = (event) => {
     const searchFieldString = event.target.value.toLowerCase();
     setSearchField(searchFieldString)
-    console.log(searchField)
   };
+
+
 
   return (
     <div className="App">
-      
+
       <h1 className="app-title">Monsters Rolodex</h1>
-      
+
       <SearchBox
         onSearchChange={onSearchChange}
         className={`search-box`}
         placeholder={'search monsters'}
       />
-{/*       
+
       <CardList
         monsters={filteredMonsters}
-      /> */}
+      />
     </div>
-  );  
+  );
 }
+
+export default App
 
 // class App extends Component {
 //   constructor() {
@@ -44,8 +65,7 @@ const App = () => {
 //     };
 //   }
 
-//   async componentDidMount() {
-//     // console.log('componentDidMounted');
+//   componentDidMount() {
 //     fetch('https://jsonplaceholder.typicode.com/users')
 //       .then(response => response.json())
 //       .then(users =>
@@ -74,15 +94,15 @@ const App = () => {
 
 //       return (
 //         <div className="App">
-          
+
 //           <h1 className="app-title">Monsters Rolodex</h1>
-          
+
 //           <SearchBox
 //             onSearchChange={onSearchChange}
 //             className={`search-box`}
 //             placeholder={'search monsters'}
 //           />
-          
+
 //           <CardList
 //             monsters={filteredMonsters}
 //           />
@@ -92,5 +112,3 @@ const App = () => {
 
 //   }
 
-
-export default App

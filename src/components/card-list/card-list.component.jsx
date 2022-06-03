@@ -12,6 +12,7 @@ class CardList extends Component {
                     return (
                         <Card
                             monster={monster}
+                            key={monster.id}
                         />
                     )
                 }    
